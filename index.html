@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>分享站点</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    1333
+    <button class="circle-button" id="open-form-button">入</button>
+    <div class="form-popup" id="form-popup">
+        <form id="github-api-form">
+            <label for="github-api">GitHub API：</label>
+            <input type="text" id="github-api" name="github-api" required>
+            <button type="submit">保存</button>
+            <button type="button" onclick="closeForm()">关闭</button>
+        </form>
+    </div>
+        <div id="data-container"></div>
 </body>
+<script src="index.js"></script>
+
 </html>
