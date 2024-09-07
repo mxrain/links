@@ -30,8 +30,8 @@
 
 .circle-button {
     position: fixed;
-    left: 86%;
-    top: 86%;
+    right: 10px;
+    bottom: 10px;
     width: 2.6em;
     height: 2.6em;
     border-radius: 50%;

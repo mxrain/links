@@ -4,7 +4,7 @@ fetch('./db.json')
     .then(data => {
         data.forEach(item => {
             const element = document.createElement('div');
-            element.textContent = `${item.name}: ${item.value}`;
+            element.textContent = `${item.text}: ${item.value}`;
             dataContainer.appendChild(element);
         });
     })
@@ -14,16 +14,16 @@ fetch('./db.json')
 
 // 页面加载完成时执行
 window.onload = function () {
-    // 获取 Cookie 中的 github_api 参数
-    const githubApi = getCookie('github_api');
+    // 获取 Cookie 中的 github_token 参数
+    const githubtoken = getCookie('github_token');
 
-    // 如果存在 github_api 参数
-    if (githubApi) {
-        const inputElement = document.getElementById('github-api');
-        inputElement.value = githubApi;
+    // 如果存在 github_token 参数
+    if (githubtoken) {
+        const inputElement = document.getElementById('github-token');
+        inputElement.value = githubtoken;
     } else {
         // 如果不存在参数，可以执行其他操作，例如提示用户输入参数
-        console.log('Cookie 中未找到 github_api 参数。');
+        console.log('Cookie 中未找到 github_token 参数。');
         // ...
     }
 };
@@ -52,16 +52,16 @@ function closeForm() {
 }
 
 // 保存 GitHub API 的函数
-function saveGithubApi(api) {
-    document.cookie = `github_api=${encodeURIComponent(api)}; path=/;`;
+function saveGithubtoken(token) {
+    document.cookie = `github_token=${encodeURIComponent(token)}; path=/;`;
 }
 
 // 监听表单提交事件
-const form = document.getElementById('github-api-form');
+const form = document.getElementById('github-token-form');
 form.addEventListener('submit', function (event) {
     event.preventDefault();
-    const githubApi = document.getElementById('github-api').value;
-    saveGithubApi(githubApi);
+    const githubtoken = document.getElementById('github-token').value;
+    saveGithubtoken(githubtoken);
     closeForm();
 });
 
