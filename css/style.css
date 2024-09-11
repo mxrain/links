@@ -1,3 +1,10 @@
+
+.data-container {
+    width: 80vw;
+    margin: 0 auto;
+}
+
+
 .form-popup {
     display: none;
     position: fixed;
@@ -67,3 +74,10 @@
     75% { background: linear-gradient(to right, #ff8c71, #ff5f6d); }
     100% { background: linear-gradient(to right, #ff5f6d, #ffc371); }
   }
+
+
+.icon {
+    width: 100px;
+    height: 100px;
+    color: #4CAF50;
+}

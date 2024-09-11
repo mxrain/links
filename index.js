@@ -1,10 +1,15 @@
+// const axios = require('axios'); // 替换成你使用的 HTTP 库
+
 const dataContainer = document.getElementById('data-container');
 fetch('./db.json')
     .then(response => response.json())
     .then(data => {
         data.forEach(item => {
             const element = document.createElement('div');
-            element.textContent = `${item.text}: ${item.value}`;
+            element.textContent = 
+            `
+            ${item.text} - ${item.link}
+            `;
             dataContainer.appendChild(element);
         });
     })

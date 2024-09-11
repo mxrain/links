@@ -5,10 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>资源桶</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
+    <!-- 数据容器 -->
+    <div id="data-container">
+
+    </div>
+
+
+
     <button class="circle-button" id="open-form-button">入</button>
     <div class="form-popup" id="form-popup">
         <form id="github-token-form">
@@ -18,7 +26,7 @@
             <button type="button" onclick="closeForm()">关闭</button>
         </form>
     </div>
-    <div id="data-container"></div>
+    
 </body>
 <script src="index.js"></script>
 
