@@ -71,6 +71,7 @@
       font-size: 16px;
     }
 
+    /* 下拉菜单在父节点正下方 */
     .nav-item .dropdown {
       width: 100px;
       text-align: center;
@@ -626,9 +627,13 @@
     navItems.forEach(navItem => {
       navItem.addEventListener('mouseover', () => {
         const category = navItem.dataset.category;
-        fetch(`db/${category.toLowerCase()}.json`)
+        console.log(category.toLowerCase());
+        
+        fetch(`db/db.json`)
           .then(response => response.json())
-          .then(data => {
+          .then(dt => {
+            data = dt[category.toLowerCase()];
+            
             const dropdown = navItem.querySelector('.dropdown');
             dropdown.innerHTML = '';
 
@@ -639,8 +644,10 @@
               const subCategoryItem = document.createElement('li');
               subCategoryItem.appendChild(subCategoryLink);
               dropdown.appendChild(subCategoryItem);
-
               if (data.items[subCategory].items) {
+                
+                
+                
                 const subSubMenu = document.createElement('ul');
                 for (const deeperCategory in data.items[subCategory].items) {
                   const deeperCategoryLink = document.createElement('a');
