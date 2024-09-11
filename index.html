@@ -1,33 +1,612 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>资源桶</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>资源桶</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukz10xaCh7m5Q4vV2wMkIDe" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .site-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .site-logo img {
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    .site-logo h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
+    .nav-item a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .nav-item .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+      z-index: 1;
+    }
+
+    .nav-item .dropdown li {
+      list-style: none;
+      margin-bottom: 5px;
+    }
+
+    .nav-item .dropdown a {
+      text-decoration: none;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .nav-item:hover .dropdown {
+      display: block;
+    }
+
+    .nav-item:hover > a {
+      color: #4CAF50;
+    }
+
+    .nav-item:hover .dropdown li:hover a {
+      color: #4CAF50;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+      font-size: 16px;
+    }
+
+    .search-bar button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    .login-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+
+    .content {
+      padding: 80px 20px 0;
+      display: flex;
+      gap: 20px;
+    }
+
+    .content > div {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .resource-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .resource-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .resource-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .resource-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 15px;
+    }
+
+    .resource-item .info {
+      flex: 1;
+    }
+
+    .resource-item .info h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .resource-item .info p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .resource-item .info .rating {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .resource-item .info .rating .star {
+      color: gold;
+      font-size: 16px;
+    }
+
+    .resource-item .info .rating .score {
+      margin-left: 5px;
+    }
+
+    .announcement {
+      height: 150px;
+      overflow-y: auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      overflow: hidden;
+    }
+
+    .carousel-slide {
+      display: flex;
+      width: 300%;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-slide img {
+      width: 33.33%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .carousel-button.prev {
+      left: 10px;
+    }
+
+    .carousel-button.next {
+      right: 10px;
+    }
+
+    .footer {
+      background-color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .social-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background-color: #eee;
+      border-radius: 50%;
+      margin-right: 10px;
+      color: #333;
+      text-decoration: none;
+      transition: background-color 0.2s;
+    }
+
+    .social-links a:hover {
+      background-color: #ddd;
+    }
+
+    .copyright {
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
 </head>
-
 <body>
-    <!-- 数据容器 -->
-    <div id="data-container">
-
+  <header>
+    <div class="site-logo">
+      <img src="logo.png" alt="资源桶 Logo">
+      <h1>资源桶</h1>
     </div>
-
-
-
-    <button class="circle-button" id="open-form-button">入</button>
-    <div class="form-popup" id="form-popup">
-        <form id="github-token-form">
-            <label for="github-token">GitHub Token：</label>
-            <input type="text" id="github-token" name="github-token" required>
-            <button type="submit">保存</button>
-            <button type="button" onclick="closeForm()">关闭</button>
-        </form>
+    <div class="nav">
+      <div class="nav-item" data-category="影视动漫">
+        <a href="#">影视动漫</a>
+        <ul class="dropdown">
+          <li><a href="/mv/anime/">番剧</a></li>
+          <li><a href="/mv/animation/">动画</a></li>
+          <li><a href="/mv/movie/">电影</a></li>
+          <li><a href="/mv/tv/">电视剧</a></li>
+          <li><a href="/mv/variety/">综艺</a></li>
+          <li><a href="/mv/documentary/">纪录片</a></li>
+          <li><a href="/mv/short-film/">短剧</a></li>
+          <li><a href="/mv/comic/">漫画</a></li>
+          <li><a href="/mv/novel/">小说</a></li>
+          <li><a href="/mv/audiobook/">有声书</a></li>
+        </ul>
+      </div>
+      <div class="nav-item" data-category="软件游戏">
+        <a href="#">软件游戏</a>
+        <ul class="dropdown">
+          <li><a href="/software-game/pc-software/">电脑软件</a></li>
+          <li><a href="/software-game/mobile-software/">手机软件</a></li>
+          <li><a href="/software-game/game/">游戏</a>
+            <ul class="dropdown">
+              <li><a href="/software-game/game/single-player-game/">单机游戏</a></li>
+              <li><a href="/software-game/game/online-game/">网络游戏</a></li>
+              <li><a href="/software-game/game/mobile-game/">手机游戏</a></li>
+              <li><a href="/software-game/game/game-resource/">游戏资源</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="nav-item" data-category="电子书">
+        <a href="#">电子书</a>
+        <ul class="dropdown">
+          <li><a href="/ebook/novel-ebook/">小说</a></li>
+          <li><a href="/ebook/textbook/">教材</a></li>
+          <li><a href="/ebook/magazine/">杂志</a></li>
+          <li><a href="/ebook/comic-ebook/">漫画</a></li>
+          <li><a href="/ebook/reference-book/">工具书</a></li>
+        </ul>
+      </div>
+      <div class="nav-item" data-category="学习教育">
+        <a href="#">学习教育</a>
+        <ul class="dropdown">
+          <li><a href="/study/course/">课程</a></li>
+          <li><a href="/study/material/">资料</a></li>
+        </ul>
+      </div>
+      <div class="nav-item" data-category="图片">
+        <a href="#">图片</a>
+        <ul class="dropdown">
+          <li><a href="/image/scenery/">风景</a></li>
+          <li><a href="/image/people/">人物</a></li>
+          <li><a href="/image/animal/">动物</a></li>
+          <li><a href="/image/cartoon/">卡通</a></li>
+          <li><a href="/image/material-image/">素材</a></li>
+          <li><a href="/image/wallpaper/">壁纸</a></li>
+        </ul>
+      </div>
+      <div class="nav-item" data-category="音乐">
+        <a href="#">音乐</a>
+        <ul class="dropdown">
+          <li><a href="/music/song/">歌曲</a></li>
+          <li><a href="/music/album/">专辑</a></li>
+          <li><a href="/music/concert/">演唱会</a></li>
+          <li><a href="/music/music-resource/">音乐资源</a></li>
+        </ul>
+      </div>
+      <div class="nav-item" data-category="其他">
+        <a href="#">其他</a>
+        <ul class="dropdown">
+          <li><a href="/other/material-other/">素材</a></li>
+          <li><a href="/other/template/">模板</a></li>
+          <li><a href="/other/tool/">工具</a></li>
+        </ul>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="搜索资源...">
+        <button>搜索</button>
+      </div>
+      <button class="login-button">后台登录</button>
     </div>
-    
+  </header>
+
+  <div class="content">
+    <div class="left-column">
+      <div class="section-title">推荐资源</div>
+      <ul class="resource-list" id="recommendList">
+        <!-- 这里将动态加载推荐资源 -->
+      </ul>
+      <div class="section-title">热门资源</div>
+      <ul class="resource-list" id="hotList">
+        <!-- 这里将动态加载热门资源 -->
+      </ul>
+    </div>
+    <div class="middle-column">
+      <div class="section-title">公告栏</div>
+      <div class="announcement">
+        <!-- 这里将动态加载公告内容 -->
+        <p>欢迎访问资源桶！</p>
+        <p>这里拥有丰富的资源，期待您的探索！</p>
+      </div>
+      <div class="section-title">轮播图</div>
+      <div class="carousel" id="carousel">
+        <div class="carousel-slide" id="carouselSlides">
+          <!-- 这里将动态加载轮播图片 -->
+          <img src="slide1.jpg" alt="轮播图片 1">
+          <img src="slide2.jpg" alt="轮播图片 2">
+          <img src="slide3.jpg" alt="轮播图片 3">
+        </div>
+        <button class="carousel-button prev" onclick="prevSlide()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-button next" onclick="nextSlide()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="section-title">最新资源</div>
+      <ul class="resource-list" id="latestList">
+        <!-- 这里将动态加载最新资源 -->
+      </ul>
+    </div>
+    <div class="right-column">
+      <div class="section-title">最近更新</div>
+      <ul class="resource-list" id="updateList">
+        <!-- 这里将动态加载最近更新资源 -->
+      </ul>
+      <div class="section-title">收益最高</div>
+      <ul class="resource-list" id="topList">
+        <!-- 这里将动态加载收益最高资源 -->
+      </ul>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="social-links">
+      <!-- 这里将动态加载社交链接 -->
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-weixin"></i>
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-qq"></i>
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-telegram"></i>
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-bilibili"></i>
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </div>
+    <div class="copyright">
+      <!-- 这里将动态加载版权信息 -->
+      © 2023 资源桶. 版权所有.
+    </div>
+  </footer>
+
+  <script>
+    // 加载数据
+    fetch('db/list.json')
+      .then(response => response.json())
+      .then(data => {
+        renderResourceList('recommendList', data.recommend);
+        renderResourceList('hotList', data.hot);
+        renderResourceList('latestList', data.latest);
+        renderResourceList('topList', data.top);
+        renderCarousel(data.carousel);
+      });
+
+    fetch('db/info.json')
+      .then(response => response.json())
+      .then(data => {
+        renderSocialLinks(data.socialLinks);
+        renderCopyright(data.copyright);
+      });
+
+    // 渲染资源列表
+    function renderResourceList(listID, data) {
+      const resourceList = document.getElementById(listID);
+      resourceList.innerHTML = ''; // 清空列表
+
+      data.forEach(resource => {
+        const resourceItem = document.createElement('li');
+        resourceItem.classList.add('resource-item');
+
+        const img = document.createElement('img');
+        img.src = resource.cover;
+        img.alt = resource.title;
+        resourceItem.appendChild(img);
+
+        const info = document.createElement('div');
+        info.classList.add('info');
+        const h3 = document.createElement('h3');
+        h3.textContent = resource.title;
+        info.appendChild(h3);
+        const p = document.createElement('p');
+        p.textContent = resource.introduction;
+        info.appendChild(p);
+
+        const rating = document.createElement('div');
+        rating.classList.add('rating');
+        const star = document.createElement('span');
+        star.classList.add('star');
+        star.textContent = '★';
+        rating.appendChild(star);
+        const score = document.createElement('span');
+        score.classList.add('score');
+        score.textContent = resource.score;
+        rating.appendChild(score);
+        info.appendChild(rating);
+
+        resourceItem.appendChild(info);
+
+        resourceList.appendChild(resourceItem);
+      });
+    }
+
+    // 渲染轮播图
+    function renderCarousel(slides) {
+      const carouselSlides = document.getElementById('carouselSlides');
+      carouselSlides.innerHTML = ''; // 清空轮播图
+
+      slides.forEach(slide => {
+        const img = document.createElement('img');
+        img.src = slide.imageUrl;
+        img.alt = slide.altText;
+        carouselSlides.appendChild(img);
+      });
+    }
+
+    // 轮播图上一张
+    function prevSlide() {
+      const carouselSlides = document.getElementById('carouselSlides');
+      const slideWidth = carouselSlides.offsetWidth / 3;
+      const currentPosition = parseInt(carouselSlides.style.transform.split('(')[1].split(',')[0]) || 0;
+      carouselSlides.style.transform = `translateX(${currentPosition + slideWidth}px)`;
+    }
+
+    // 轮播图下一张
+    function nextSlide() {
+      const carouselSlides = document.getElementById('carouselSlides');
+      const slideWidth = carouselSlides.offsetWidth / 3;
+      const currentPosition = parseInt(carouselSlides.style.transform.split('(')[1].split(',')[0]) || 0;
+      carouselSlides.style.transform = `translateX(${currentPosition - slideWidth}px)`;
+    }
+
+    // 渲染社交链接
+    function renderSocialLinks(socialLinks) {
+      const socialLinksContainer = document.querySelector('.social-links');
+      socialLinksContainer.innerHTML = '';
+
+      socialLinks.forEach(link => {
+        const socialLink = document.createElement('a');
+        socialLink.href = link.url;
+        socialLink.target = '_blank';
+        socialLink.rel = 'noopener noreferrer';
+        socialLink.innerHTML = `<i class="${link.icon}"></i>`;
+        socialLinksContainer.appendChild(socialLink);
+      });
+    }
+
+    // 渲染版权信息
+    function renderCopyright(copyrightText) {
+      document.querySelector('.copyright').textContent = copyrightText;
+    }
+
+    // 导航菜单交互
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(navItem => {
+      navItem.addEventListener('mouseover', () => {
+        const category = navItem.dataset.category;
+        fetch(`db/${category.toLowerCase()}.json`)
+          .then(response => response.json())
+          .then(data => {
+            const dropdown = navItem.querySelector('.dropdown');
+            dropdown.innerHTML = '';
+
+            for (const subCategory in data.items) {
+              const subCategoryLink = document.createElement('a');
+              subCategoryLink.href = data.items[subCategory].link;
+              subCategoryLink.textContent = subCategory;
+              const subCategoryItem = document.createElement('li');
+              subCategoryItem.appendChild(subCategoryLink);
+              dropdown.appendChild(subCategoryItem);
+
+              if (data.items[subCategory].items) {
+                const subSubMenu = document.createElement('ul');
+                for (const deeperCategory in data.items[subCategory].items) {
+                  const deeperCategoryLink = document.createElement('a');
+                  deeperCategoryLink.href = data.items[subCategory].items[deeperCategory].link;
+                  deeperCategoryLink.textContent = deeperCategory;
+                  const deeperCategoryItem = document.createElement('li');
+                  deeperCategoryItem.appendChild(deeperCategoryLink);
+                  subSubMenu.appendChild(deeperCategoryItem);
+                }
+                subCategoryItem.appendChild(subSubMenu);
+              }
+            }
+          });
+      });
+    });
+  </script>
 </body>
-<script src="index.js"></script>
-
 </html>
