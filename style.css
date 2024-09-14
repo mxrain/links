@@ -291,10 +291,12 @@ nav {
 
 /* 鼠标悬停效果 */
 .category-button:hover .nav-items {
+  /* display: block;是否显示子菜单 */
   display: block;
 }
 
 .category-item:hover .sub-category-items {
+  /*  */
   display: block;
 }
 
